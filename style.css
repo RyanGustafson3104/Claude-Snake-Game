@@ -1,0 +1,339 @@
+:root {
+  --case-color:      #2b3a35;
+  --case-dark:       #1c2723;
+  --lcd:             #b7c79a;
+  --lcd-shadow:      #a5b588;
+  --pixel:           #26301f;
+  --pixel-dim:       rgba(38, 48, 31, 0.14);
+  --label-color:     #d9e2cf;
+
+  --font-display: "Silkscreen", "Courier New", monospace;
+  --font-body:    "IBM Plex Mono", Menlo, monospace;
+
+  color-scheme: dark;
+}
+
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 16px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--case-dark);
+  color: var(--label-color);
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+
+
+.device {
+  width: 100%;
+  max-width: 460px;
+  box-sizing: border-box;
+  padding: 20px 20px 24px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  background: var(--case-color);
+  border-radius: 22px 22px 48px 22px;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.08), 
+    0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+.brand {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+
+
+.screen-frame {
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--case-dark);
+}
+
+.screen {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--lcd);
+  box-shadow:
+    inset 0 0 0 2px var(--lcd-shadow),
+    inset 0 6px 14px rgba(0, 0, 0, 0.18);
+}
+
+.hud {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 10px 4px;
+  border-bottom: 2px solid var(--pixel);
+
+  color: var(--pixel);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+
+canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  image-rendering: pixelated;
+}
+
+
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  padding: 16px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+
+  text-align: center;
+  color: var(--pixel);
+  background: rgba(183, 199, 154, 0.88);
+}
+
+.overlay h1,
+.overlay h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.overlay h1 {
+  font-size: clamp(42px, 13vw, 64px);
+  letter-spacing: 0.04em;
+}
+
+.overlay h2 {
+  font-size: clamp(26px, 8vw, 36px);
+}
+
+.overlay p {
+  margin: 0;
+  max-width: 30ch;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.blink {
+  animation: blink 1.1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+
+.countdown-screen {
+  background: transparent;
+  pointer-events: none;
+}
+
+.countdown-number {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(72px, 26vw, 120px);
+  line-height: 1;
+  animation: pop 0.9s ease-out;
+}
+
+@keyframes pop {
+  from { transform: scale(1.6); opacity: 0.2; }
+  to   { transform: scale(1);   opacity: 1;   }
+}
+
+
+.final-stats {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 4px 18px;
+
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.final-stats dt {
+  text-align: right;
+  opacity: 0.7;
+}
+
+.final-stats dd {
+  margin: 0;
+  text-align: left;
+}
+
+
+
+.button-stack {
+  width: 100%;
+  max-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-button {
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+
+  background: var(--pixel);
+  color: var(--lcd);
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.menu-button.secondary {
+  background: transparent;
+  color: var(--pixel);
+  box-shadow: inset 0 0 0 2px var(--pixel);
+}
+
+.menu-button:hover {
+  filter: brightness(1.25);
+}
+
+button:focus-visible {
+  outline: 3px solid var(--label-color);
+  outline-offset: 2px;
+}
+
+.overlay button:focus-visible {
+  outline-color: var(--pixel);
+}
+
+.speed-picker {
+  display: flex;
+  gap: 6px;
+}
+
+.speed-button {
+  padding: 4px 8px;
+  border: 2px solid var(--pixel);
+  border-radius: 3px;
+  cursor: pointer;
+
+  background: transparent;
+  color: var(--pixel);
+  font-family: var(--font-display);
+  font-size: 12px;
+}
+
+.speed-button[aria-pressed="true"] {
+  background: var(--pixel);
+  color: var(--lcd);
+}
+
+.food-picker {
+  display: flex;
+  gap: 6px;
+}
+
+.food-button {
+  padding: 4px 8px;
+  border: 2px solid var(--pixel);
+  border-radius: 3px;
+  cursor: pointer;
+
+  background: transparent;
+  color: var(--pixel);
+  font-family: var(--font-display);
+  font-size: 12px;
+}
+
+.food-button[aria-pressed="true"] {
+  background: var(--pixel);
+  color: var(--lcd);
+}
+
+
+.d-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 52px);
+  grid-template-rows: repeat(3, 52px);
+  gap: 4px;
+  justify-content: center;
+}
+
+.d-pad button {
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  touch-action: manipulation;
+
+  background: var(--case-dark);
+  color: var(--label-color);
+  font-size: 18px;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* Looks pressed down while held */
+.d-pad button:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+.d-pad .up    { grid-area: 1 / 2; }
+.d-pad .left  { grid-area: 2 / 1; }
+.d-pad .right { grid-area: 2 / 3; }
+.d-pad .down  { grid-area: 3 / 2; }
+
+@media (hover: hover) and (pointer: fine) {
+  .d-pad {
+    display: none;
+  }
+}
+
+.controls-hint {
+  margin: 0;
+  text-align: center;
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .countdown-number,
+  .blink {
+    animation: none;
+  }
+}

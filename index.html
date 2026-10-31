@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+
+  <!-- All of the page's styling lives in style.css -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="device">
+
+    <div class="brand">
+      <span>Pocket Serpent</span>
+      <span>Model 97</span>
+    </div>
+
+    <div class="screen-frame">
+      <div class="screen" id="screen">
+
+        <div class="hud">
+          <span>Score <b id="score-display">0000</b></span>
+          <span>Best <b id="best-display">0000</b></span>
+        </div>
+
+        <canvas id="board" width="400" height="400" aria-label="Snake game board"></canvas>
+
+
+        <div class="overlay" id="menu-screen">
+          <h1>SNAKE</h1>
+          <p>Eat the food, grow longer, and don't run into the walls or yourself.</p>
+
+          <div class="speed-picker" role="group" aria-label="Speed">
+            <button type="button" class="speed-button" data-ms="140" aria-pressed="false">Slow</button>
+            <button type="button" class="speed-button" data-ms="100" aria-pressed="true">Normal</button>
+            <button type="button" class="speed-button" data-ms="70"  aria-pressed="false">Fast</button>
+          </div>
+          <div class="food-picker" role="group" aria-label="Foods">
+            <button type="button" class="food-button" data-food="1" aria-pressed="true">1</button>
+            <button type="button" class="food-button" data-food="3" aria-pressed="false">3</button>
+            <button type="button" class="food-button" data-food="5" aria-pressed="false">5</button>
+            <button type="button" class="food-button" data-food="9999" aria-pressed="false">MAX</button>
+          </div>
+
+          <div class="button-stack">
+            <button type="button" class="menu-button" id="start-button">Start game</button>
+          </div>
+
+          <p class="blink">Press Enter to start</p>
+        </div>
+
+
+        <div class="overlay countdown-screen" id="countdown-screen" hidden>
+          <div class="countdown-number" id="countdown-number">3</div>
+        </div>
+
+
+        <div class="overlay" id="pause-screen" hidden>
+          <h2>Paused</h2>
+          <p>Press P or Space to resume</p>
+        </div>
+
+
+        <div class="overlay" id="game-over-screen" hidden>
+          <h2>Game over</h2>
+
+          <dl class="final-stats">
+            <dt>Score</dt>  <dd id="final-score">0</dd>
+            <dt>Length</dt> <dd id="final-length">0</dd>
+            <dt>Best</dt>   <dd id="final-best">0</dd>
+          </dl>
+
+          <p id="new-best-message" hidden>New best score!</p>
+
+          <div class="button-stack">
+            <button type="button" class="menu-button" id="restart-button">Restart</button>
+            <button type="button" class="menu-button secondary" id="main-menu-button">Main menu</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="d-pad" aria-label="Direction pad">
+      <button type="button" class="up"    data-direction="up"    aria-label="Up">▲</button>
+      <button type="button" class="left"  data-direction="left"  aria-label="Left">◀</button>
+      <button type="button" class="right" data-direction="right" aria-label="Right">▶</button>
+      <button type="button" class="down"  data-direction="down"  aria-label="Down">▼</button>
+    </div>
+
+    <p class="controls-hint">Arrow keys or WASD to steer · P or Space to pause · swipe on touch</p>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
