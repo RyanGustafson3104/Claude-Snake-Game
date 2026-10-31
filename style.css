@@ -263,12 +263,14 @@ button:focus-visible {
   color: var(--lcd);
 }
 
-.food-picker {
+.food-picker,
+.grid-picker {
   display: flex;
   gap: 6px;
 }
 
-.food-button {
+.food-button,
+.grid-button {
   padding: 4px 8px;
   border: 2px solid var(--pixel);
   border-radius: 3px;
@@ -278,9 +280,11 @@ button:focus-visible {
   color: var(--pixel);
   font-family: var(--font-display);
   font-size: 12px;
+  white-space: nowrap;
 }
 
-.food-button[aria-pressed="true"] {
+.food-button[aria-pressed="true"],
+.grid-button[aria-pressed="true"] {
   background: var(--pixel);
   color: var(--lcd);
 }

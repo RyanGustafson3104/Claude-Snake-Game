@@ -1,5 +1,6 @@
-const GRID_SIZE = 20;          // the board is 20 cells wide and 20 cells tall
-const CELL_SIZE = 20;          // each cell is 20 x 20 pixels on the canvas
+let GRID_SIZE = 20;            // cells wide and tall; changed by the grid size buttons
+let CELL_SIZE = 20;            // pixels per cell; recalculated so the grid fills the canvas
+let PIXEL_SCALE = 1;           // CELL_SIZE / 20, used to scale the small drawing details
 const POINTS_PER_FOOD = 10;
 const BEST_SCORE_KEY = "snake-best-score";   // name used to save the best score
 
@@ -56,6 +57,7 @@ const restartButton = document.getElementById("restart-button");
 const mainMenuButton = document.getElementById("main-menu-button");
 const speedButtons = document.querySelectorAll(".speed-button");
 const foodButtons = document.querySelectorAll(".food-button");
+const gridButtons = document.querySelectorAll(".grid-button");
 const dPadButtons = document.querySelectorAll(".d-pad button");
 const screenElement = document.getElementById("screen");
 
@@ -127,6 +129,7 @@ function updateScoreBar() {
 // "inset" shrinks the square so there is a small gap between cells,
 // which gives the LCD-pixel look.
 function drawCell(cellX, cellY, color, inset) {
+  inset *= PIXEL_SCALE;
   const pixelX = cellX * CELL_SIZE + inset;
   const pixelY = cellY * CELL_SIZE + inset;
   const size = CELL_SIZE - inset * 2;
@@ -154,7 +157,12 @@ function drawFood() {
     drawCell(food.x, food.y, COLOR_PIXEL, 5);
 
     ctx.fillStyle = COLOR_PIXEL;
-    ctx.fillRect(food.x * CELL_SIZE + 8, food.y * CELL_SIZE + 2, 4, 3);
+    ctx.fillRect(
+      food.x * CELL_SIZE + 8 * PIXEL_SCALE,
+      food.y * CELL_SIZE + 2 * PIXEL_SCALE,
+      4 * PIXEL_SCALE,
+      3 * PIXEL_SCALE
+    );
   });
   
 }
@@ -177,16 +185,16 @@ function drawEyes(head) {
   const direction = DIRECTIONS[currentDirection];
 
   // Center of the head cell, nudged 4px forward
-  const centerX = head.x * CELL_SIZE + CELL_SIZE / 2 + direction.x * 4;
-  const centerY = head.y * CELL_SIZE + CELL_SIZE / 2 + direction.y * 4;
+  const centerX = head.x * CELL_SIZE + CELL_SIZE / 2 + direction.x * 4 * PIXEL_SCALE;
+  const centerY = head.y * CELL_SIZE + CELL_SIZE / 2 + direction.y * 4 * PIXEL_SCALE;
 
   // Spread the eyes apart sideways.
   // Moving up/down → eyes sit left and right. Moving left/right → eyes sit above and below.
   const movingVertically = (direction.y !== 0);
-  const spreadX = movingVertically ? 4 : 0;
-  const spreadY = movingVertically ? 0 : 4;
+  const spreadX = movingVertically ? 4 * PIXEL_SCALE : 0;
+  const spreadY = movingVertically ? 0 : 4 * PIXEL_SCALE;
 
-  const eyeSize = 3;
+  const eyeSize = 3 * PIXEL_SCALE;
   ctx.fillStyle = COLOR_SCREEN;
   ctx.fillRect(centerX - spreadX - eyeSize / 2, centerY - spreadY - eyeSize / 2, eyeSize, eyeSize);
   ctx.fillRect(centerX + spreadX - eyeSize / 2, centerY + spreadY - eyeSize / 2, eyeSize, eyeSize);
@@ -258,10 +266,15 @@ function placeFoods(){
 // Put food in a random empty cell
 function placeFood() {
   // List every cell the snake isn't on...
+  // (A Set makes the lookup fast even on a 100x100 board full of food)
+  const occupied = new Set();
+  snake.forEach(segment => occupied.add(segment.x + "," + segment.y));
+  foods.forEach(food => occupied.add(food.x + "," + food.y));
+
   const emptyCells = [];
   for (let x = 0; x < GRID_SIZE; x++) {
     for (let y = 0; y < GRID_SIZE; y++) {
-      if (!isOnSnake(x, y) && !isOnFood(x, y)) {
+      if (!occupied.has(x + "," + y)) {
         emptyCells.push({ x: x, y: y });
       }
     }
@@ -553,6 +566,28 @@ for (const button of foodButtons) {
 }
 
 
+// --- Grid size buttons ---
+for (const button of gridButtons) {
+  button.addEventListener("click", () => {
+    setGridSize(Number(button.dataset.grid));
+    setUpNewGame();   // redraw the board behind the menu at the new size
+
+    // Mark only the clicked button as selected
+    for (const otherButton of gridButtons) {
+      const isSelected = (otherButton === button);
+      otherButton.setAttribute("aria-pressed", String(isSelected));
+    }
+  });
+}
+
+// The canvas stays the same size on screen; the cells shrink or grow to fit
+function setGridSize(size) {
+  GRID_SIZE = size;
+  CELL_SIZE = canvas.width / GRID_SIZE;
+  PIXEL_SCALE = CELL_SIZE / 20;
+}
+
+
 // --- On-screen D-pad (touch screens) ---
 // pointerdown instead of click so the turn happens the instant it's pressed
 
@@ -658,6 +693,7 @@ document.addEventListener("visibilitychange", () => {
    --------------------------------------------------------- */
 
 bestScore = loadBestScore();
+setGridSize(GRID_SIZE);
 goToMainMenu();
 
 // Redraw once the web fonts finish loading, in case they arrived late
